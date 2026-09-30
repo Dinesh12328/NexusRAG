@@ -1,0 +1,28 @@
+services:
+  # Spring Boot Backend
+  - type: web
+    name: nexus-rag-backend
+    runtime: docker
+    dockerfilePath: ./ragplatform/Dockerfile
+    dockerContext: ./ragplatform
+    plan: standard
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: NEON_DB_URL
+        sync: false
+      - key: NEON_DB_USER
+        sync: false
+      - key: NEON_DB_PASSWORD
+        sync: false
+      - key: UPSTASH_REDIS_PASSWORD
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+
+  # React Frontend (Static Site or Docker)
+  - type: web
+    name: nexus-rag-frontend
+    runtime: docker
+    dockerfilePath: ./ragplatform-ui/Dockerfile
+    dockerContext: ./ragplatform-ui
+    plan: starter

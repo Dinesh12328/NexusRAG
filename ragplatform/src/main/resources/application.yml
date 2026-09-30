@@ -1,0 +1,103 @@
+spring:
+  application:
+    name: ragplatform
+
+  # ===== DATABASE (Neon) =====
+  datasource:
+    url: ${NEON_DB_URL}
+    username: ${NEON_DB_USER}
+    password: ${NEON_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5          # ✅ added
+      connection-timeout: 30000
+      keepalive-time: 300000
+      max-lifetime: 600000
+
+  # ===== JPA =====
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false             # ✅ added
+    show-sql: false                 # ✅ changed from true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  # ===== REDIS (Upstash) =====
+  data:
+    redis:
+      host: great-bengal-85462.upstash.io
+      port: 6379
+      password: ${UPSTASH_REDIS_PASSWORD}
+      ssl:
+        enabled: true
+
+  # ===== FILE UPLOAD =====
+  servlet:
+    multipart:
+      max-file-size: 20MB           # ✅ added
+      max-request-size: 20MB        # ✅ added
+
+  # ===== SPRING AI =====
+  ai:
+    model:
+      chat: google-genai
+      embedding:
+        text: google-genai
+
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          options:
+            model: gemini-3.5-flash # ✅ supported Gemini Flash model
+            temperature: 0.3        # ✅ changed from 0.7
+            max-output-tokens: 2048
+        embedding:
+          api-key: ${GEMINI_API_KEY}
+          text:
+            options:
+              model: gemini-embedding-001
+              task-type: RETRIEVAL_DOCUMENT
+              dimensions: 768
+
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 768
+
+    retry:                          # ✅ added
+      max-attempts: 3
+      initial-interval: 2s
+      multiplier: 2
+      max-interval: 10s
+
+# ===== SERVER =====
+server:
+  port: ${PORT:8080}
+
+# ===== ACTUATOR =====
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+# ===== LOGGING =====
+logging:
+  level:
+    com.dinesh.ragplatform: DEBUG
+    org.springframework.ai: DEBUG
+    org.springframework.security: DEBUG
+
+# ===== JWT =====
+jwt:
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+  expiration: ${JWT_EXPIRATION:86400000}

@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./ragplatform
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NEON_DB_URL=${NEON_DB_URL}
+      - NEON_DB_USER=${NEON_DB_USER}
+      - NEON_DB_PASSWORD=${NEON_DB_PASSWORD}
+      - UPSTASH_REDIS_PASSWORD=${UPSTASH_REDIS_PASSWORD}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./ragplatform-ui
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
