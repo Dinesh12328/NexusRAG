@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || ''; // configurable for cloud deployments, fallback to proxy in local dev
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? '' : 'https://ragplatform-app-auahfubfb6cyf9bz.centralindia-01.azurewebsites.net');
 
 export const TOKEN_STORAGE_KEY = 'rag_auth_token';
 export const USER_STORAGE_KEY = 'rag_auth_user';

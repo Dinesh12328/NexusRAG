@@ -15,10 +15,18 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // allow local dev and Azure cloud deployments (App Service + Static Web Apps)
+        // Local development
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://localhost:5173");
+
+        // Actual Azure Static Web Apps frontend URL
+        config.addAllowedOrigin("https://mango-dune-01f9ff200.5.azurestaticapps.net");
+
+        // Actual Azure App Service backend URL
+        config.addAllowedOrigin("https://ragplatform-app-auahfubfb6cyf9bz.centralindia-01.azurewebsites.net");
+
+        // Pattern fallback for Azure subdomains
         config.setAllowedOriginPatterns(List.of(
-                "http://localhost:3000",
-                "http://localhost:5173",
                 "https://*.azurestaticapps.net",
                 "https://*.azurewebsites.net"
         ));

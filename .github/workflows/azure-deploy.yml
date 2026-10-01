@@ -6,19 +6,13 @@ on:
     branches: [ main, master ]
 
 env:
-  AZURE_WEBAPP_NAME: ragplatform-app    # Set to your Azure App Service name
+  AZURE_WEBAPP_NAME: ragplatform-app
   JAVA_VERSION: '21'
 
 jobs:
-  # ==========================================
-  # Build and Deploy Spring Boot Backend
-  # ==========================================
   build-and-deploy-backend:
-    name: Build & Deploy Backend to Azure App Service
+    name: Build and Deploy Backend
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ragplatform
 
     steps:
       - name: Checkout Code
@@ -32,13 +26,12 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
+        working-directory: ragplatform   # ✅ only on build step
         run: mvn clean package -DskipTests --batch-mode
 
-      # Deploys the built JAR to Azure App Service
-      # Requires AZURE_WEBAPP_PUBLISH_PROFILE in GitHub Repo Secrets
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ragplatform/target/*.jar
+          package: ragplatform/target/*.jar   # ✅ full path from root
