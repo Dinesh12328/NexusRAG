@@ -26,12 +26,12 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        working-directory: ragplatform   # ✅ only on build step
+        working-directory: ragplatform
         run: mvn clean package -DskipTests --batch-mode
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ragplatform/target/*.jar   # ✅ full path from root
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F43B0C934C104F5EBFAB7F3A87E7E99D }}
+          package: ragplatform/target/*.jar
